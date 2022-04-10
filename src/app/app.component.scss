@@ -1,0 +1,16 @@
+@import '../assets/general.scss';
+
+::ng-deep .danger {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+::ng-deep .success {
+  background-color: #44bd32;
+  color: #ffffff;
+}
+
+::ng-deep .info {
+  background-color: #2980b9;
+  color: #ffffff;
+}

@@ -5,7 +5,7 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Tasks App</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink={{item.route}} *ngFor="let item of menuItems; keyvalue">{{ item.name }}</a>
+      <a mat-list-item routerLink={{item.route}} *ngFor="let item of headerNavItems; keyvalue">{{ item.name }}</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -18,10 +18,11 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Welcome User</span>
+      <span>{{ titleText }}</span>
     </mat-toolbar>
     <section class="main-content">
       <ng-content></ng-content>
+      <ng-ui-snackbar></ng-ui-snackbar>
     </section>
   </mat-sidenav-content>
 </mat-sidenav-container>

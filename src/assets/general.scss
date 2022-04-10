@@ -1,0 +1,26 @@
+mat-card {
+  width: 65em;
+}
+
+mat-card-title, mat-card-subtitle {
+  padding: 0.5rem 0;
+}
+
+mat-card-content {
+  padding: 2em 0;
+  form {
+    min-width: 50em;
+    max-width: 2000em;
+    width: 80%;
+  }
+}
+
+mat-form-field {
+  width: 80%;
+  margin: 0.5em 0;
+}
+
+mat-card-actions {
+  padding: 2em 0;
+  margin: 0;
+}
