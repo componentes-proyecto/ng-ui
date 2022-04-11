@@ -8,12 +8,14 @@ import { AddUserComponent } from './add-user/add-user.component';
 
 import { UtilsModule } from './utils/utils.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderNavComponent,
     AddUserComponent,
+    LoginComponent,
   ],
   imports: [
     UtilsModule,

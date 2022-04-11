@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiOptionsModel } from '../models/api-options.model';
-import { Common } from '../models/common.model';
+import { UserModel } from '../models/user.model';
 import { constants } from '../utils/constants';
 
 @Injectable({
@@ -17,12 +17,16 @@ export class ApiDataService {
   ) { }
 
 // USERS API CALLS
-  postUser(payload: Common): Observable<any> {
+  postUser(payload: UserModel): Observable<any> {
     return this._post(`${constants.API_URL}/users`, payload);
   }
 
+  verifyUser(payload: UserModel): Observable<any> {
+    return this._post(`${constants.API_URL}/users/verify`, payload);
+  }
+
 // GENERIC API CALLS TO STANDARIZE USAGE
-  _post(url: string, body: Common, headers?: HttpHeaders) {
+  _post(url: string, body: any, headers?: HttpHeaders) {
     if (headers) {
       this.api_options.headers = headers;
     }
