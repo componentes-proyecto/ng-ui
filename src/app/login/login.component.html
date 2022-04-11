@@ -1,0 +1,29 @@
+<mat-card>
+  <mat-card-title>Login</mat-card-title>
+  <mat-card-subtitle>Validate your identity by entering your username and password.</mat-card-subtitle>
+  <mat-card-content>
+    <form
+      [formGroup]="userDataForm"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your username:</mat-label>
+        <input type="email" matInput formControlName="username">
+        <mat-error>{{ usernameErrorLabel }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your password:</mat-label>
+        <input type="password" matInput formControlName="password">
+        <mat-error>{{ passwordErrorLabel }}</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-divider inset></mat-divider>
+  <mat-card-actions>
+    <button  mat-raised-button (click)="redirRegister()">Register</button>
+    <button mat-raised-button color="primary" (click)="validateUserData()" [disabled]="userDataForm.invalid">Sing in</button>
+  </mat-card-actions>
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="displayLoading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

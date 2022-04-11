@@ -1,30 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { PageDataModel } from '../models/pageDataModel.model';
 import { ApiDataService } from '../services/api-data.service';
-
 import { UIDataService } from '../services/ui-data.service';
 import { constants } from '../utils/constants';
 
 @Component({
-  selector: 'ng-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss']
+  selector: 'ng-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class AddUserComponent implements OnInit {
+export class LoginComponent implements OnInit {
   public displayLoading = false;
   public disableRegister = true;
   public usernameErrorLabel = 'This value is required.';
   public passwordErrorLabel = 'This value is required.';
-  public confPasswordErrorLabel = 'This value is required.';
-  public createUserForm: FormGroup = new FormGroup({
+  public userDataForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
   });
-  
+
   constructor(
     private readonly router: Router,
     private readonly uiDataService: UIDataService,
@@ -39,45 +35,42 @@ export class AddUserComponent implements OnInit {
 
   updatePageData() {
     const pageData: PageDataModel = {
-      headerNavItems: [],
-      titleText: 'Let\'s create your account first!'
+      headerNavItems: [ ],
+      titleText: 'Access your account.'
     }
     this.uiDataService.updatePageData(pageData);
   }
 
   handleUsernameErrors() {
-    this.createUserForm.controls['username'].valueChanges
+    this.userDataForm.controls['username'].valueChanges
     .subscribe(val => {
-      for (const err in this.createUserForm.controls['username'].errors) {
+      for (const err in this.userDataForm.controls['username'].errors) {
         this.usernameErrorLabel = this.processErrorMessage(err);
       }
     });
   }
 
   handlePasswordErrors() {
-    this.createUserForm.controls['password'].valueChanges
+    this.userDataForm.controls['password'].valueChanges
     .subscribe(val => {
-      for (const err in this.createUserForm.controls['password'].errors) {
+      for (const err in this.userDataForm.controls['password'].errors) {
         this.passwordErrorLabel = this.processErrorMessage(err);
-      }
-    });
-
-    this.createUserForm.controls['confPassword'].valueChanges
-    .subscribe(val => {
-      for (const err in this.createUserForm.controls['confPassword'].errors) {
-        this.confPasswordErrorLabel = this.processErrorMessage(err);
       }
     });
   }
 
   handleSuccess(message: string) {
-    this.displayLoading = false;
-    this.uiDataService.displaySnackBar(message, 'success', 'Close');
+    setTimeout(() => {
+      this.displayLoading = false;
+      this.uiDataService.displaySnackBar(message, 'success', 'Close');
+    }, constants.INTERVAL);
   }
 
   handleError(message: string) {
-    this.displayLoading = false;
-    this.uiDataService.displaySnackBar(message, 'danger', 'Close');
+    setTimeout(() => {
+      this.displayLoading = false;
+      this.uiDataService.displaySnackBar(message, 'danger', 'Close');
+    }, constants.INTERVAL);
   }
 
   processErrorMessage(err: string) {
@@ -97,32 +90,35 @@ export class AddUserComponent implements OnInit {
     }
   }
 
-  registerUser() {
-    const userPostForm = this.createUserForm;
+  validateUserData() {
+    const userPostForm = this.userDataForm;
 
     if (userPostForm.invalid) {
       this.handleError('Careful with errors!');
-    } else if (userPostForm.controls['password'].value.toLowerCase() !== userPostForm.controls['confPassword'].value.toLowerCase()) {
-      this.handleError('The password and confirmation does\'t match!');
     } else {
       this.displayLoading = true;
       const payload = {
         username: userPostForm.value.username,
         password: userPostForm.value.password
       };
-      this.apiDataService.postUser(payload)
+      this.apiDataService.verifyUser(payload)
       .subscribe({
         next: (res) => {
-          this.handleSuccess('User successfully registered, now sign in!');
+          if (res.status) {
+            this.handleError('The provided user information is invalid!');
+          } else {
+            this.handleSuccess('User successfully validated, welcome!');
+          }
         },
         error: (err) => {
-          this.handleError('Unexpected error during the registry, try again later!');
+          this.handleError(constants.DEFAULT_ERR_MESSAGE);
         }
       });
     }
   }
 
-  redirSignIn() {
-    this.router.navigate(['login']);
+  redirRegister() {
+    this.router.navigate(['register']);
    }
+
 }
