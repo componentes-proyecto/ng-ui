@@ -25,11 +25,22 @@ export class ApiDataService {
     return this._post(`${constants.API_URL}/users/verify`, payload);
   }
 
+  verifyActiveUser(): Observable<any> {
+    return this._get(`${constants.API_URL}/users/session`);
+  }
+
 // GENERIC API CALLS TO STANDARIZE USAGE
-  _post(url: string, body: any, headers?: HttpHeaders) {
+  private _post(url: string, body: any, headers?: HttpHeaders) {
     if (headers) {
       this.api_options.headers = headers;
     }
     return this.client.post(url, body, this.api_options);
+  }
+
+  private _get(url: string, headers?: HttpHeaders) {
+    if (headers) {
+      this.api_options.headers = headers;
+    }
+    return this.client.get(url, this.api_options);
   }
 }

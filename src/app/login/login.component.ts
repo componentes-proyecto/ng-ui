@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiResponse } from '../models/api-response.model';
 import { PageDataModel } from '../models/pageDataModel.model';
 import { ApiDataService } from '../services/api-data.service';
 import { UIDataService } from '../services/ui-data.service';
+import { UserDataService } from '../services/user-data.service';
 import { constants } from '../utils/constants';
 
 @Component({
@@ -24,7 +26,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly uiDataService: UIDataService,
-    private readonly apiDataService: ApiDataService
+    private readonly apiDataService: ApiDataService,
+    private readonly userDataService: UserDataService
   ) { }
 
   ngOnInit(): void {
@@ -60,17 +63,13 @@ export class LoginComponent implements OnInit {
   }
 
   handleSuccess(message: string) {
-    setTimeout(() => {
-      this.displayLoading = false;
-      this.uiDataService.displaySnackBar(message, 'success', 'Close');
-    }, constants.INTERVAL);
+    this.displayLoading = false;
+    this.uiDataService.displaySnackBar(message, 'success', 'Close');
   }
 
   handleError(message: string) {
-    setTimeout(() => {
-      this.displayLoading = false;
-      this.uiDataService.displaySnackBar(message, 'danger', 'Close');
-    }, constants.INTERVAL);
+    this.displayLoading = false;
+    this.uiDataService.displaySnackBar(message, 'danger', 'Close');
   }
 
   processErrorMessage(err: string) {
@@ -103,11 +102,11 @@ export class LoginComponent implements OnInit {
       };
       this.apiDataService.verifyUser(payload)
       .subscribe({
-        next: (res) => {
+        next: (res: ApiResponse) => {
           if (res.status) {
-            this.handleError('The provided user information is invalid!');
+            this.handleSuccess(res.message || 'User successfully validated, welcome!');
           } else {
-            this.handleSuccess('User successfully validated, welcome!');
+            this.handleError(res.message || 'The provided user information is invalid!');
           }
         },
         error: (err) => {
